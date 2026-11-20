@@ -1,0 +1,48 @@
+:root { color-scheme: dark; }
+* { box-sizing: border-box; }
+html, body { min-height: 100%; }
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: radial-gradient(ellipse at 50% 30%, #0b0f0d 0%, #050706 55%, #020303 100%);
+  font-family: "Courier New", Courier, monospace;
+  color: #7dffa0;
+  overflow: hidden;
+}
+.screen { position: relative; line-height: 0; }
+canvas {
+  display: block;
+  background: #000;
+  border: 3px solid #10331c;
+  border-radius: 10px;
+  box-shadow: 0 0 60px rgba(35, 255, 120, 0.12), 0 10px 40px rgba(0, 0, 0, 0.7);
+  max-width: min(92vw, 800px);
+  height: auto;
+  image-rendering: pixelated;
+}
+/* CRT scanline overlay */
+.screen::after {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border-radius: 7px;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.22) 2px,
+    rgba(0, 0, 0, 0.22) 4px
+  );
+  pointer-events: none;
+}
+.hint {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: 2px;
+  opacity: 0.65;
+  text-align: center;
+}
