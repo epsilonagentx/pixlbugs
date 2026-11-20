@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "Retro Space Invaders clone in vanilla JavaScript and Canvas",
+  "type": "module",
   "scripts": {
     "test": "node --test",
     "dev": "vite --port 8000",
