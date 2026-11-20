@@ -24,7 +24,7 @@ const {
   INV_GAP_X,
   INV_GAP_Y,
   UFO_POINTS,
-} = require("../logic.js");
+} = require("../src/logic.js");
 
 test("rectsOverlap detects overlap but not edges that merely touch", () => {
   assert.equal(rectsOverlap(0, 0, 10, 10, 5, 5, 10, 10), true);

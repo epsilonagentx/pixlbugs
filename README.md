@@ -39,15 +39,19 @@ dev server. Works fully offline.
 
 ## Project layout
 
-| File                    | Purpose                                                |
-| ----------------------- | ------------------------------------------------------ |
-| `game.js`               | Canvas rendering, audio, input, game loop              |
-| `logic.js`              | Shared config and pure simulation helpers (no DOM)     |
-| `tests/logic.test.js`   | Unit tests for bunkers, collisions, and wave layout    |
-| `index.html`, `style.css` | Page shell and CRT styling                           |
+```
+space-invaders/
+├── index.html        Page shell (entry point, stays at the root for Vite)
+├── src/
+│   ├── game.js       Canvas rendering, audio, input, game loop
+│   ├── logic.js      Shared config and pure simulation helpers (no DOM)
+│   └── style.css     CRT styling
+└── tests/
+    └── logic.test.js Unit tests for bunkers, collisions, and wave layout
+```
 
-`logic.js` is loaded as a classic script before `game.js`, so the game still runs
-straight from `file://` — no bundler or module server needed.
+`src/logic.js` is loaded as a classic script before `src/game.js`, so the game
+still runs straight from `file://` — no bundler or module server needed.
 
 ## Development
 
@@ -56,7 +60,7 @@ npm test      # runs node --test; nothing to install
 ```
 
 Node is only required for the tests. `jsconfig.json` enables editor
-type-checking (`checkJs`) for `game.js` and `logic.js`; it has no effect on the
+type-checking (`checkJs`) for everything in `src/`; it has no effect on the
 game and needs no build step.
 
 ## Known simplifications

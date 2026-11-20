@@ -7,5 +7,5 @@
     "noEmit": true,
     "strict": false
   },
-  "include": ["game.js", "logic.js"]
+  "include": ["src/**/*.js"]
 }
