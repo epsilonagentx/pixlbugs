@@ -7,6 +7,7 @@
   "scripts": {
     "test": "node --test",
     "dev": "vite --port 8000",
+    "start": "node server.js",
     "serve": "vite preview --port 8000"
   },
   "devDependencies": {
