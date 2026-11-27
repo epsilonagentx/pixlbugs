@@ -1,11 +1,15 @@
 {
-  "name": "space-invaders",
+  "name": "pixlbugs",
   "version": "1.0.0",
   "private": true,
-  "description": "Retro Space Invaders clone in vanilla JavaScript and Canvas",
+  "license": "GPL-3.0-only",
+  "description": "A retro shoot-'em-up built with vanilla JavaScript and the Canvas API",
+  "type": "module",
   "scripts": {
     "test": "node --test",
     "dev": "vite --port 8000",
+    "start": "node server.js",
+    "build": "vite build",
     "serve": "vite preview --port 8000"
   },
   "devDependencies": {

@@ -1,0 +1,67 @@
+# Runs the game's image from Docker Hub. There's no web server in front of
+# it here: for a public address, put your own reverse proxy in front.
+
+# The same project name on every machine, whatever the folder is called.
+name: pixlbugs
+
+services:
+  pixlbugs:
+    # The game's image on Docker Hub, at the version in package.json. Raise
+    # it here with each release. pull_policy: always fetches the current one
+    # on every `up`, because a tag can be overwritten with a fixed image.
+    # Set IMAGE to run another image, and add --pull never for an image that
+    # is only on this machine:
+    #   IMAGE=pixlbugs:1.0.0-amd64 docker compose up -d --pull never
+    image: ${IMAGE:-epsilonagentx/pixlbugs:1.0.0}
+    pull_policy: always
+    # Start again after a crash or a reboot, but not after a manual
+    # `docker compose stop` or `docker stop`.
+    restart: unless-stopped
+    # Node runs as PID 1 and ignores SIGTERM on its own; an init process
+    # lets `docker compose down` stop it at once instead of after 10s.
+    init: true
+    # Published on this machine's loopback address only, for a reverse proxy
+    # on the same machine. Set BIND_ADDRESS=0.0.0.0 to reach the game
+    # directly from other machines, and PORT for another port.
+    ports:
+      - "${BIND_ADDRESS:-127.0.0.1}:${PORT:-8000}:8000"
+    # Healthy once the server answers. It uses Node, since the image has no
+    # shell, curl or wget.
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:8000/').then(r => process.exit(r.ok ? 0 : 1), () => process.exit(1))"
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+      start_interval: 1s
+    # The server only reads its own files and listens on a port above 1024,
+    # so it needs no writable filesystem, no Linux capabilities and no way
+    # to gain privileges.
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    # Limits, so a fault can't take the whole machine down. The memory limit
+    # leaves room for running the arm64 image under emulation, which uses
+    # far more than running natively.
+    mem_limit: 256m
+    cpus: 1.0
+    pids_limit: 64
+    # At most 3 MB of logs, which matters on an SD card.
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+        max-file: "3"
+
+networks:
+  # A fixed name, not pixlbugs_default, so a reverse proxy in another
+  # Compose project can join it (as an external network) and reach the game
+  # at http://pixlbugs:8000.
+  default:
+    name: pixlbugs
