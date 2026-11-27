@@ -1,8 +1,8 @@
 {
-  "name": "space-invaders",
+  "name": "pixel-bugs",
   "version": "1.0.0",
   "private": true,
-  "description": "Retro Space Invaders clone in vanilla JavaScript and Canvas",
+  "description": "A retro shoot-'em-up built with vanilla JavaScript and the Canvas API",
   "type": "module",
   "scripts": {
     "test": "node --test",

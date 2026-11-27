@@ -1,4 +1,4 @@
-# Space Invaders
+# Pixel Bugs
 
 A retro shoot-'em-up built with vanilla JavaScript and the Canvas API. No
 runtime dependencies and nothing to build before you play; Vite is used as the
@@ -49,7 +49,7 @@ and nothing else. It listens on `127.0.0.1` only, unless `HOST` says otherwise.
 ## Project layout
 
 ```
-space-invaders/
+pixel-bugs/
 ├── index.html              Page shell (entry point, stays at the root for Vite)
 ├── server.js               The game's own static file server (`npm start`)
 ├── Dockerfile              Image that runs server.js
@@ -109,7 +109,7 @@ npm test      # runs node --test; nothing to install
 
 ## Run it in Docker
 
-`compose.yaml` runs the published image, `epsilonagentx/space-invaders:1.0.0`,
+`compose.yaml` runs the published image, `epsilonagentx/pixel-bugs:1.0.0`,
 from Docker Hub. If the repository is private, run `docker login` first.
 
 ```sh
@@ -124,8 +124,8 @@ The game is published on `127.0.0.1:8000` only, for a reverse proxy on the same
 machine (`http://127.0.0.1:8000`). Set `PORT` to use another port, e.g.
 `PORT=8080 docker compose up -d`, and `BIND_ADDRESS=0.0.0.0` to reach the game
 directly from other machines. A reverse proxy running in Docker can join the
-`space-invaders` network as an external network and use
-`http://space-invaders:8000` instead.
+`pixel-bugs` network as an external network and use
+`http://pixel-bugs:8000` instead.
 
 The container starts again after a crash or a reboot
 (`restart: unless-stopped`), and `docker compose ps` shows it as `healthy` once
@@ -138,16 +138,16 @@ it with `IMAGE`. `--pull never` makes Compose use the local image instead of
 looking for it on Docker Hub:
 
 ```sh
-docker build -t space-invaders .
-IMAGE=space-invaders docker compose up -d --pull never
+docker build -t pixel-bugs .
+IMAGE=pixel-bugs docker compose up -d --pull never
 ```
 
 The image runs `server.js` with Node 24 as a non-root user; there's nothing to
 compile. It installs Alpine's latest fixes and removes what the server doesn't
 use: npm, Yarn, Corepack, `apk`, the system OpenSSL and BusyBox, which clears
 all of the base image's known vulnerabilities. Without BusyBox there's no shell
-or basic commands in the container, so `docker compose exec space-invaders sh`
-fails; run Node instead, e.g. `docker compose exec space-invaders node -p
+or basic commands in the container, so `docker compose exec pixel-bugs sh`
+fails; run Node instead, e.g. `docker compose exec pixel-bugs node -p
 process.arch`. Inside the container the server listens on `0.0.0.0` (via
 `HOST`) so the published port can reach it; outside Docker it still listens on
 `127.0.0.1` only.
@@ -155,7 +155,7 @@ process.arch`. Inside the container the server listens on `0.0.0.0` (via
 Without Compose:
 
 ```sh
-docker run --rm --init -p 8000:8000 space-invaders
+docker run --rm --init -p 8000:8000 pixel-bugs
 ```
 
 `--init` (`init: true` in `compose.yaml`) lets `Ctrl+C` and `docker stop` shut
@@ -175,13 +175,13 @@ git and Docker):
 for arch in amd64 arm64; do
   mkdir -p docker-build/$arch
   docker buildx build --platform linux/$arch \
-    -t space-invaders:1.0.0-$arch \
-    --output type=docker,dest=docker-build/$arch/space-invaders-1.0.0-$arch.tar .
+    -t pixel-bugs:1.0.0-$arch \
+    --output type=docker,dest=docker-build/$arch/pixel-bugs-1.0.0-$arch.tar .
 done
 ```
 
-This gives `docker-build/amd64/space-invaders-1.0.0-amd64.tar` and
-`docker-build/arm64/space-invaders-1.0.0-arm64.tar`. Building the `arm64` image
+This gives `docker-build/amd64/pixel-bugs-1.0.0-amd64.tar` and
+`docker-build/arm64/pixel-bugs-1.0.0-arm64.tar`. Building the `arm64` image
 on an `amd64` machine needs QEMU emulation: Docker Desktop includes it, and on
 Linux `docker run --privileged --rm tonistiigi/binfmt --install arm64` adds it.
 
@@ -190,18 +190,18 @@ to run, and `--pull never` makes Compose use the local image. Open
 `http://localhost:8000` while each one runs:
 
 ```sh
-IMAGE=space-invaders:1.0.0-amd64 docker compose up -d --pull never
-docker compose exec space-invaders node -p process.arch    # x64
+IMAGE=pixel-bugs:1.0.0-amd64 docker compose up -d --pull never
+docker compose exec pixel-bugs node -p process.arch    # x64
 docker compose down
 
 # the ARM image, under emulation on an amd64 machine:
-IMAGE=space-invaders:1.0.0-arm64 DOCKER_DEFAULT_PLATFORM=linux/arm64 docker compose up -d --pull never
-docker compose exec space-invaders node -p process.arch    # arm64
+IMAGE=pixel-bugs:1.0.0-arm64 DOCKER_DEFAULT_PLATFORM=linux/arm64 docker compose up -d --pull never
+docker compose exec pixel-bugs node -p process.arch    # arm64
 docker compose down
 ```
 
 If the images aren't loaded on this machine yet, run
-`docker load -i docker-build/<arch>/space-invaders-1.0.0-<arch>.tar` first.
+`docker load -i docker-build/<arch>/pixel-bugs-1.0.0-<arch>.tar` first.
 
 **3. Upload them.** Docker Hub doesn't take `.tar` files directly: load each
 file into Docker, tag it with your username, and push it. Then join the two
@@ -210,38 +210,38 @@ into one `1.0.0` tag and one `latest` tag that cover both processors:
 ```sh
 docker login
 for arch in amd64 arm64; do
-  docker load -i docker-build/$arch/space-invaders-1.0.0-$arch.tar
-  docker tag space-invaders:1.0.0-$arch <user>/space-invaders:1.0.0-$arch
-  docker push <user>/space-invaders:1.0.0-$arch
+  docker load -i docker-build/$arch/pixel-bugs-1.0.0-$arch.tar
+  docker tag pixel-bugs:1.0.0-$arch <user>/pixel-bugs:1.0.0-$arch
+  docker push <user>/pixel-bugs:1.0.0-$arch
 done
 docker buildx imagetools create \
-  -t <user>/space-invaders:1.0.0 -t <user>/space-invaders:latest \
-  <user>/space-invaders:1.0.0-amd64 <user>/space-invaders:1.0.0-arm64
+  -t <user>/pixel-bugs:1.0.0 -t <user>/pixel-bugs:latest \
+  <user>/pixel-bugs:1.0.0-amd64 <user>/pixel-bugs:1.0.0-arm64
 ```
 
-`docker buildx imagetools inspect <user>/space-invaders:latest` should list
+`docker buildx imagetools inspect <user>/pixel-bugs:latest` should list
 `linux/amd64` and `linux/arm64`.
 
 **4. Test it from Docker Hub.** Compose downloads the current image on every
-`up` of the `image` in `compose.yaml` (`<user>/space-invaders:<version>`):
+`up` of the `image` in `compose.yaml` (`<user>/pixel-bugs:<version>`):
 
 ```sh
 docker compose up -d
-docker compose exec space-invaders node -p process.arch    # x64
+docker compose exec pixel-bugs node -p process.arch    # x64
 docker compose down
 
 # the ARM image, under emulation on an amd64 machine:
 DOCKER_DEFAULT_PLATFORM=linux/arm64 docker compose up -d
-docker compose exec space-invaders node -p process.arch    # arm64
+docker compose exec pixel-bugs node -p process.arch    # arm64
 docker compose down
 ```
 
 Or without Compose:
 
 ```sh
-docker run --pull always --rm --init -p 8000:8000 <user>/space-invaders
+docker run --pull always --rm --init -p 8000:8000 <user>/pixel-bugs
 # the ARM image, under emulation on an amd64 machine:
-docker run --pull always --rm --init --platform linux/arm64 -p 8000:8000 <user>/space-invaders
+docker run --pull always --rm --init --platform linux/arm64 -p 8000:8000 <user>/pixel-bugs
 ```
 
 ## Known simplifications

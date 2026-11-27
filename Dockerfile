@@ -27,10 +27,10 @@ COPY src ./src
 # Standard OCI labels: what the image is and who made it, for
 # `docker inspect` and for tools that read them. Here, after the RUN step, a
 # change to them doesn't make Docker run apk upgrade again.
-LABEL org.opencontainers.image.title="Space Invaders" \
-      org.opencontainers.image.description="Retro Space Invaders clone in vanilla JavaScript and Canvas." \
+LABEL org.opencontainers.image.title="Pixel Bugs" \
+      org.opencontainers.image.description="A retro shoot-'em-up built with vanilla JavaScript and the Canvas API." \
       org.opencontainers.image.authors="Epsilon AgentX" \
-      org.opencontainers.image.url="https://hub.docker.com/r/epsilonagentx/space-invaders" \
+      org.opencontainers.image.url="https://hub.docker.com/r/epsilonagentx/pixel-bugs" \
       org.opencontainers.image.base.name="docker.io/library/node:24-alpine"
 ENV HOST=0.0.0.0 PORT=8000
 USER node

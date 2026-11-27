@@ -95,7 +95,7 @@ export function startServer(
       const address = server.address();
       const actualPort =
           typeof address === 'object' && address ? address.port : tryPort;
-      console.log(`Space Invaders running at http://localhost:${actualPort}`);
+      console.log(`Pixel Bugs running at http://localhost:${actualPort}`);
     });
   };
 
