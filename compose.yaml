@@ -2,17 +2,17 @@
 # it here: for a public address, put your own reverse proxy in front.
 
 # The same project name on every machine, whatever the folder is called.
-name: pixel-bugs
+name: pixlbugs
 
 services:
-  pixel-bugs:
+  pixlbugs:
     # The game's image on Docker Hub, at the version in package.json. Raise
     # it here with each release. pull_policy: always fetches the current one
     # on every `up`, because a tag can be overwritten with a fixed image.
     # Set IMAGE to run another image, and add --pull never for an image that
     # is only on this machine:
-    #   IMAGE=pixel-bugs:1.0.0-amd64 docker compose up -d --pull never
-    image: ${IMAGE:-epsilonagentx/pixel-bugs:1.0.0}
+    #   IMAGE=pixlbugs:1.0.0-amd64 docker compose up -d --pull never
+    image: ${IMAGE:-epsilonagentx/pixlbugs:1.0.0}
     pull_policy: always
     # Start again after a crash or a reboot, but not after a manual
     # `docker compose stop` or `docker stop`.
@@ -60,8 +60,8 @@ services:
         max-file: "3"
 
 networks:
-  # A fixed name, not pixel-bugs_default, so a reverse proxy in another
+  # A fixed name, not pixlbugs_default, so a reverse proxy in another
   # Compose project can join it (as an external network) and reach the game
-  # at http://pixel-bugs:8000.
+  # at http://pixlbugs:8000.
   default:
-    name: pixel-bugs
+    name: pixlbugs

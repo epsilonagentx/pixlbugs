@@ -37,7 +37,7 @@ test('serves the page at /', async () => {
   assert.equal(response.status, 200);
   assert.equal(
       response.headers.get('content-type'), 'text/html; charset=utf-8');
-  assert.match(await response.text(), /<title>Pixel Bugs<\/title>/);
+  assert.match(await response.text(), /<title>Pixlbugs<\/title>/);
 });
 
 test('serves modules as JavaScript, which browsers require', async () => {

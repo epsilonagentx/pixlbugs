@@ -62,7 +62,7 @@ const PROMPT_BLINK_RATE = 2;
 export function drawTitleScreen(context, sprites, time) {
   const center = PLAYFIELD_WIDTH / 2;
   drawText(
-      context, 'PIXEL BUGS', center, NAME_Y, NAME_SCALE, Color.WHITE,
+      context, 'PIXLBUGS', center, NAME_Y, NAME_SCALE, Color.WHITE,
       Align.CENTER);
 
   let top = LEGEND_TOP;
