@@ -8,7 +8,9 @@
  */
 export const Color = {
   WHITE: '#f4f4f4',
-  CYAN: '#45e6e6',
+  AMBER: '#ff9f1c',
+  MAGENTA: '#e040fb',
+  TEAL: '#2ec4b6',
   GREEN: '#4dff7c',
   RED: '#ff4d6d',
   BUNKER: '#19e57a',

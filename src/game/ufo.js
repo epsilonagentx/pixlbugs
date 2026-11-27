@@ -4,7 +4,7 @@
  */
 
 import {PLAYFIELD_WIDTH} from '../config.js';
-import {artHeight, artWidth, UFO_ART} from '../pixel_art.js';
+import {artHeight, artWidth, MOTH_ART} from '../pixel_art.js';
 
 import {rectsOverlap} from './geometry.js';
 import {randomBetween, randomItem} from './random.js';
@@ -51,10 +51,10 @@ export class Ufo {
   /** @param {boolean} fromLeft Whether the saucer enters from the left. */
   constructor(fromLeft) {
     /** @const {number} */
-    this.width = artWidth(UFO_ART);
+    this.width = artWidth(MOTH_ART);
 
     /** @const {number} */
-    this.height = artHeight(UFO_ART);
+    this.height = artHeight(MOTH_ART);
 
     /**
      * Left edge.

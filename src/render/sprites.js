@@ -5,15 +5,15 @@
 
 import {PIXEL_SCALE} from '../config.js';
 import {InvaderType} from '../game/invaders.js';
-import {artHeight, artWidth, CRAB_FRAMES, INVADER_BULLET_FRAMES, OCTOPUS_FRAMES, PLAYER_ART, PLAYER_BULLET_ART, SQUID_FRAMES, UFO_ART} from '../pixel_art.js';
+import {artHeight, artWidth, BEETLE_FRAMES, FLY_FRAMES, INVADER_BULLET_FRAMES, MANTIS_FRAMES, MOTH_ART, PLAYER_ART, PLAYER_BULLET_ART} from '../pixel_art.js';
 
 import {Color} from './palette.js';
 
 /** Color of each kind of invader. */
 export const INVADER_COLORS = Object.freeze({
-  [InvaderType.SQUID]: Color.WHITE,
-  [InvaderType.CRAB]: Color.CYAN,
-  [InvaderType.OCTOPUS]: Color.GREEN,
+  [InvaderType.MANTIS]: Color.AMBER,
+  [InvaderType.BEETLE]: Color.MAGENTA,
+  [InvaderType.FLY]: Color.TEAL,
 });
 
 /**
@@ -56,7 +56,7 @@ export class Sprites {
     this.player = paint(PLAYER_ART, Color.PLAYER);
 
     /** @const {!HTMLCanvasElement} */
-    this.ufo = paint(UFO_ART, Color.RED);
+    this.ufo = paint(MOTH_ART, Color.RED);
 
     /** @const {!HTMLCanvasElement} */
     this.playerBullet = paint(PLAYER_BULLET_ART, Color.BULLET);
@@ -72,12 +72,12 @@ export class Sprites {
      * @const {!Object<!InvaderType, !Array<!HTMLCanvasElement>>}
      */
     this.invaders = {
-      [InvaderType.SQUID]:
-          paintFrames(SQUID_FRAMES, INVADER_COLORS[InvaderType.SQUID]),
-      [InvaderType.CRAB]:
-          paintFrames(CRAB_FRAMES, INVADER_COLORS[InvaderType.CRAB]),
-      [InvaderType.OCTOPUS]:
-          paintFrames(OCTOPUS_FRAMES, INVADER_COLORS[InvaderType.OCTOPUS]),
+      [InvaderType.MANTIS]:
+          paintFrames(MANTIS_FRAMES, INVADER_COLORS[InvaderType.MANTIS]),
+      [InvaderType.BEETLE]:
+          paintFrames(BEETLE_FRAMES, INVADER_COLORS[InvaderType.BEETLE]),
+      [InvaderType.FLY]:
+          paintFrames(FLY_FRAMES, INVADER_COLORS[InvaderType.FLY]),
     };
   }
 }

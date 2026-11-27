@@ -17,7 +17,7 @@ const NAME_SCALE = 6;
 
 /** Invaders listed in the points table, from the top. */
 const LEGEND_INVADERS =
-    Object.freeze([InvaderType.SQUID, InvaderType.CRAB, InvaderType.OCTOPUS]);
+    Object.freeze([InvaderType.MANTIS, InvaderType.BEETLE, InvaderType.FLY]);
 
 /** Y position of the points table's first row. */
 const LEGEND_TOP = 180;

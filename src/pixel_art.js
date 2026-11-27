@@ -6,96 +6,96 @@
 
 import {PIXEL_SCALE} from './config.js';
 
-/** The player's ship. */
+/** The player's turret: twin barrels over a split base. */
 export const PLAYER_ART = Object.freeze([
-  '......#......',
-  '.....###.....',
-  '.....###.....',
-  '.############',
+  '...#.....#...',
+  '...#.....#...',
+  '....#####....',
+  '..#########..',
+  '.###########.',
   '#############',
-  '#############',
-  '#############',
-  '#############',
+  '###.#####.###',
+  '#...........#',
 ]);
 
-/** The mystery saucer. */
-export const UFO_ART = Object.freeze([
-  '...#####...',
-  '..#######..',
+/** The mystery saucer, a moth in flight. */
+export const MOTH_ART = Object.freeze([
+  '#.#.....#.#',
+  '###.#.#.###',
+  '###########',
   '.#########.',
-  '##.##.##.##',
-  '..########.',
+  '..#.#.#.#..',
 ]);
 
-/** Squid, the top row of the fleet: two animation frames. */
-export const SQUID_FRAMES = Object.freeze([
+/** Mantis, the top row of the fleet: two animation frames. */
+export const MANTIS_FRAMES = Object.freeze([
   Object.freeze([
-    '...##...',
-    '..####..',
-    '.######.',
-    '##.##.##',
-    '########',
-    '..####..',
-    '.##..##.',
-    '.#....#.',
-  ]),
-  Object.freeze([
-    '...##...',
-    '..####..',
-    '.######.',
-    '##.##.##',
-    '########',
-    '.#.##.#.',
-    '..#..#..',
-    '.#....#.',
-  ]),
-]);
-
-/** Crab, the middle rows of the fleet: two animation frames. */
-export const CRAB_FRAMES = Object.freeze([
-  Object.freeze([
-    '...##...',
-    '..####..',
-    '########',
-    '##.##.##',
-    '########',
-    '..#..#..',
     '#.#..#.#',
-    '##....##',
-  ]),
-  Object.freeze([
+    '.#.##.#.',
+    '..####..',
     '...##...',
     '..####..',
-    '########',
-    '##.##.##',
-    '########',
-    '.#.##.#.',
     '..#..#..',
+    '.#....#.',
+    '#......#',
+  ]),
+  Object.freeze([
+    '.#....#.',
+    '#.####.#',
+    '..####..',
+    '...##...',
+    '..####..',
+    '..#..#..',
+    '#......#',
     '.#....#.',
   ]),
 ]);
 
-/** Octopus, the bottom rows of the fleet: two animation frames. */
-export const OCTOPUS_FRAMES = Object.freeze([
+/** Beetle, the middle rows of the fleet: two animation frames. */
+export const BEETLE_FRAMES = Object.freeze([
   Object.freeze([
-    '..####..',
-    '.######.',
-    '########',
-    '########',
-    '.##..##.',
-    '.##..##.',
-    '.#.##.#.',
-    '..#.##..',
-  ]),
-  Object.freeze([
-    '..####..',
-    '.######.',
-    '########',
-    '########',
-    '.##..##.',
+    '#......#',
     '.#.##.#.',
     '..#..#..',
+    '..####..',
+    '########',
+    '#.#..#.#',
+    '.######.',
+    '#......#',
+  ]),
+  Object.freeze([
+    '#......#',
+    '.#.##.#.',
+    '..#..#..',
+    '..####..',
+    '########',
+    '.#.##.#.',
+    '.######.',
     '.#....#.',
+  ]),
+]);
+
+/** Fly, the bottom rows of the fleet: two animation frames. */
+export const FLY_FRAMES = Object.freeze([
+  Object.freeze([
+    '#......#',
+    '########',
+    '##.##.##',
+    '########',
+    '.#.##.#.',
+    '.######.',
+    '#......#',
+    '.#....#.',
+  ]),
+  Object.freeze([
+    '.#....#.',
+    '########',
+    '##.##.##',
+    '########',
+    '.#.##.#.',
+    '.######.',
+    '.#....#.',
+    '#......#',
   ]),
 ]);
 

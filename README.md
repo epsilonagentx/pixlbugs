@@ -1,8 +1,8 @@
 # Space Invaders
 
-A retro clone of the 1978 arcade classic, built with vanilla JavaScript and the
-Canvas API. No runtime dependencies and no build step; Vite is used only as a
-dev server. Works fully offline.
+A retro shoot-'em-up built with vanilla JavaScript and the Canvas API. No
+runtime dependencies and nothing to build before you play; Vite is used as the
+dev server and for `npm run build`. Works fully offline.
 
 ## How to play
 
@@ -38,7 +38,7 @@ and nothing else. It listens on `127.0.0.1` only, unless `HOST` says otherwise.
 
 ## Rules
 
-- Crabs are worth 20, squids 30, octopuses 10 points (like the original).
+- Beetles are worth 20, mantises 30, flies 10 points.
 - The mystery saucer is worth 50–300 random points.
 - Destructible bunkers protect your ship; invaders grind them down.
 - Your ship fires two bolts at once, with up to four on screen.

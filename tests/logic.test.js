@@ -54,15 +54,15 @@ test('createInvaders centers a full 5x11 formation', () => {
   }
 });
 
-test('invader rows use the classic types and scores', () => {
-  assert.equal(invaderTypeForRow(0), InvaderType.SQUID);
+test('invader rows use the mantis, beetle and fly types and scores', () => {
+  assert.equal(invaderTypeForRow(0), InvaderType.MANTIS);
   assert.equal(pointsForRow(0), 30);
   for (const row of [1, 2]) {
-    assert.equal(invaderTypeForRow(row), InvaderType.CRAB);
+    assert.equal(invaderTypeForRow(row), InvaderType.BEETLE);
     assert.equal(pointsForRow(row), 20);
   }
   for (const row of [3, 4]) {
-    assert.equal(invaderTypeForRow(row), InvaderType.OCTOPUS);
+    assert.equal(invaderTypeForRow(row), InvaderType.FLY);
     assert.equal(pointsForRow(row), 10);
   }
 });
@@ -141,7 +141,7 @@ test('Bunker.overlaps sees standing cells and ignores the empty arch', () => {
   assert.equal(bunker.overlaps(-100, -100, 1, 1), false);
 });
 
-test('pickUfoPoints draws from the classic table', () => {
+test('pickUfoPoints draws from the saucer table', () => {
   assert.equal(pickUfoPoints(() => 0), UFO_POINTS[0]);
   assert.equal(pickUfoPoints(() => 0.999), UFO_POINTS[UFO_POINTS.length - 1]);
   assert.equal(pickUfoPoints(() => 1), UFO_POINTS[UFO_POINTS.length - 1]);

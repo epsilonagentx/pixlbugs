@@ -4,7 +4,7 @@
  */
 
 import {PLAYFIELD_WIDTH, SIDE_MARGIN} from '../config.js';
-import {artHeight, artWidth, CRAB_FRAMES, OCTOPUS_FRAMES, SQUID_FRAMES} from '../pixel_art.js';
+import {artHeight, artWidth, BEETLE_FRAMES, FLY_FRAMES, MANTIS_FRAMES} from '../pixel_art.js';
 
 import {rectsOverlap} from './geometry.js';
 import {randomBetween, randomItem} from './random.js';
@@ -14,16 +14,16 @@ import {randomBetween, randomItem} from './random.js';
  * @enum {string}
  */
 export const InvaderType = {
-  SQUID: 'squid',
-  CRAB: 'crab',
-  OCTOPUS: 'octopus',
+  MANTIS: 'mantis',
+  BEETLE: 'beetle',
+  FLY: 'fly',
 };
 
 /** Points scored for destroying each kind of invader. */
 export const INVADER_POINTS = Object.freeze({
-  [InvaderType.SQUID]: 30,
-  [InvaderType.CRAB]: 20,
-  [InvaderType.OCTOPUS]: 10,
+  [InvaderType.MANTIS]: 30,
+  [InvaderType.BEETLE]: 20,
+  [InvaderType.FLY]: 10,
 });
 
 /** Invaders in each row of the formation. */
@@ -33,10 +33,10 @@ export const INVADER_COLUMNS = 11;
 export const INVADER_ROWS = 5;
 
 /** Width of every invader, in canvas pixels. */
-export const INVADER_WIDTH = artWidth(CRAB_FRAMES[0]);
+export const INVADER_WIDTH = artWidth(BEETLE_FRAMES[0]);
 
 /** Height of every invader, in canvas pixels. */
-export const INVADER_HEIGHT = artHeight(CRAB_FRAMES[0]);
+export const INVADER_HEIGHT = artHeight(BEETLE_FRAMES[0]);
 
 /** Horizontal gap between invaders in the formation. */
 export const INVADER_GAP_X = 20;
@@ -44,7 +44,7 @@ export const INVADER_GAP_X = 20;
 /** Vertical gap between invaders in the formation. */
 export const INVADER_GAP_Y = 16;
 
-if ([...SQUID_FRAMES, ...CRAB_FRAMES, ...OCTOPUS_FRAMES].some(
+if ([...MANTIS_FRAMES, ...BEETLE_FRAMES, ...FLY_FRAMES].some(
         (frame) => artWidth(frame) !== INVADER_WIDTH ||
             artHeight(frame) !== INVADER_HEIGHT)) {
   throw new Error('Every invader frame must be the same size');
@@ -80,8 +80,8 @@ const MAX_BULLETS = 3;
  * @return {!InvaderType}
  */
 export function invaderTypeForRow(row) {
-  if (row === 0) return InvaderType.SQUID;
-  return row <= 2 ? InvaderType.CRAB : InvaderType.OCTOPUS;
+  if (row === 0) return InvaderType.MANTIS;
+  return row <= 2 ? InvaderType.BEETLE : InvaderType.FLY;
 }
 
 /**
