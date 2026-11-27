@@ -1,0 +1,39 @@
+# Enforces the branch order: feature/* -> develop -> main. Pull requests that
+# break the order fail this check, and the branches require it to merge.
+name: Branch flow
+
+on:
+  pull_request:
+    branches: [develop, main]
+
+jobs:
+  check-source:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the source branch
+        env:
+          BASE: ${{ github.base_ref }}
+          HEAD: ${{ github.head_ref }}
+        run: |
+          case "$BASE" in
+            main)
+              if [ "$HEAD" != "develop" ]; then
+                echo "main accepts pull requests only from develop (got '$HEAD')."
+                exit 1
+              fi
+              ;;
+            develop)
+              case "$HEAD" in
+                feature/*) ;;
+                *)
+                  echo "develop accepts pull requests only from feature/* (got '$HEAD')."
+                  exit 1
+                  ;;
+              esac
+              ;;
+            *)
+              echo "Unexpected base branch '$BASE'."
+              exit 1
+              ;;
+          esac
+          echo "OK: '$HEAD' -> '$BASE' follows the branch order."
