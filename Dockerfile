@@ -1,8 +1,10 @@
 # The game's own server, `node server.js`, like `npm start`. The game is plain
 # JavaScript modules with no build step, so there's a single stage.
 FROM node:24-alpine
-# Trim the base image to what the server needs, which removes all of its
-# known vulnerabilities:
+# Trim the base image to what the server needs, which leaves no OS or npm
+# packages with known vulnerabilities in a scan. Node's own bundled libraries
+# (OpenSSL and others) aren't in the scan, and change only with a new Node
+# release: rebuild the image after each one.
 # - apk upgrade: install the fixes Alpine has released.
 # - rm: remove npm, Yarn and Corepack, which the server doesn't use, and the
 #   base image's entrypoint script, which needs the shell removed below.

@@ -144,13 +144,15 @@ IMAGE=pixlbugs docker compose up -d --pull never
 
 The image runs `server.js` with Node 24 as a non-root user; there's nothing to
 compile. It installs Alpine's latest fixes and removes what the server doesn't
-use: npm, Yarn, Corepack, `apk`, the system OpenSSL and BusyBox, which clears
-all of the base image's known vulnerabilities. Without BusyBox there's no shell
-or basic commands in the container, so `docker compose exec pixlbugs sh`
-fails; run Node instead, e.g. `docker compose exec pixlbugs node -p
-process.arch`. Inside the container the server listens on `0.0.0.0` (via
-`HOST`) so the published port can reach it; outside Docker it still listens on
-`127.0.0.1` only.
+use: npm, Yarn, Corepack, `apk`, the system OpenSSL and BusyBox. A vulnerability
+scan finds no known vulnerabilities in the OS or npm packages that remain.
+Node's own bundled libraries, such as OpenSSL, aren't covered by that scan;
+they change only with a new Node release, so rebuild the image after each one.
+Without BusyBox there's no shell or basic commands in the container, so
+`docker compose exec pixlbugs sh` fails; run Node instead, e.g. `docker compose
+exec pixlbugs node -p process.arch`. Inside the container the server listens on
+`0.0.0.0` (via `HOST`) so the published port can reach it; outside Docker it
+still listens on `127.0.0.1` only.
 
 Without Compose:
 
