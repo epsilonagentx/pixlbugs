@@ -29,7 +29,7 @@ COPY src ./src
 # change to them doesn't make Docker run apk upgrade again.
 LABEL org.opencontainers.image.title="Pixlbugs" \
       org.opencontainers.image.description="A retro shoot-'em-up built with vanilla JavaScript and the Canvas API." \
-      org.opencontainers.image.authors="Epsilon AgentX" \
+      org.opencontainers.image.authors="epsilonagentx" \
       org.opencontainers.image.url="https://hub.docker.com/r/epsilonagentx/pixlbugs" \
       org.opencontainers.image.base.name="docker.io/library/node:24-alpine"
 ENV HOST=0.0.0.0 PORT=8000
