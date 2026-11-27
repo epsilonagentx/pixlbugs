@@ -1,32 +1,25 @@
-"use strict";
+/**
+ * @fileoverview Unit tests for the game logic that does not need a browser:
+ * geometry, the invader formation, bunkers and the saucer's points.
+ */
 
-const test = require("node:test");
-const assert = require("node:assert/strict");
+import * as assert from 'node:assert/strict';
+import {test} from 'node:test';
 
-const {
-  rectsOverlap,
-  pointsForRow,
-  invaderTypeForRow,
-  makeInvaders,
-  makeBunkers,
-  damageBunker,
-  eraseBunkerRect,
-  bunkerOverlapsRect,
-  pickUfoPoints,
-  BUNKER_SHAPE,
-  BUNKER_CELL,
-  BUNKER_COLS,
-  BUNKER_ROWS,
-  INV_COLS,
-  INV_ROWS,
-  INV_W,
-  INV_H,
-  INV_GAP_X,
-  INV_GAP_Y,
-  UFO_POINTS,
-} = require("../logic.js");
+import {Bunker, BUNKER_CELL_SIZE, BUNKER_COLUMNS, BUNKER_ROWS, BUNKER_SHAPE, createBunkers} from '../src/game/bunkers.js';
+import {rectsOverlap} from '../src/game/geometry.js';
+import {createInvaders, INVADER_COLUMNS, INVADER_GAP_X, INVADER_GAP_Y, INVADER_HEIGHT, INVADER_ROWS, INVADER_WIDTH, InvaderType, invaderTypeForRow, pointsForRow} from '../src/game/invaders.js';
+import {pickUfoPoints, UFO_POINTS} from '../src/game/ufo.js';
 
-test("rectsOverlap detects overlap but not edges that merely touch", () => {
+/**
+ * @param {!Bunker} bunker
+ * @return {number} How many cells are still standing.
+ */
+function countStanding(bunker) {
+  return bunker.cells.flat().filter(Boolean).length;
+}
+
+test('rectsOverlap detects overlap but not edges that merely touch', () => {
   assert.equal(rectsOverlap(0, 0, 10, 10, 5, 5, 10, 10), true);
   assert.equal(rectsOverlap(0, 0, 10, 10, 10, 0, 10, 10), false);
   assert.equal(rectsOverlap(0, 0, 10, 10, 11, 0, 10, 10), false);
@@ -34,118 +27,121 @@ test("rectsOverlap detects overlap but not edges that merely touch", () => {
   assert.equal(rectsOverlap(0, 0, 10, 10, 9, 9, 1, 1), true);
 });
 
-test("makeInvaders centers a full 5x11 formation", () => {
-  const startY = 128;
-  const invaders = makeInvaders(800, startY);
-  const totalW = INV_COLS * INV_W + (INV_COLS - 1) * INV_GAP_X;
-  const startX = (800 - totalW) / 2;
+test('createInvaders centers a full 5x11 formation', () => {
+  const top = 128;
+  const invaders = createInvaders(800, top);
+  const formationWidth =
+      INVADER_COLUMNS * INVADER_WIDTH + (INVADER_COLUMNS - 1) * INVADER_GAP_X;
+  const left = (800 - formationWidth) / 2;
 
-  assert.equal(invaders.length, INV_ROWS * INV_COLS);
+  assert.equal(invaders.length, INVADER_ROWS * INVADER_COLUMNS);
   assert.equal(invaders[0].row, 0);
-  assert.equal(invaders[0].col, 0);
-  assert.equal(invaders[0].x, startX);
-  assert.equal(invaders[0].y, startY);
+  assert.equal(invaders[0].column, 0);
+  assert.equal(invaders[0].x, left);
+  assert.equal(invaders[0].y, top);
 
   const last = invaders[invaders.length - 1];
-  assert.equal(last.row, INV_ROWS - 1);
-  assert.equal(last.col, INV_COLS - 1);
-  assert.equal(last.x, startX + (INV_COLS - 1) * (INV_W + INV_GAP_X));
-  assert.equal(last.y, startY + (INV_ROWS - 1) * (INV_H + INV_GAP_Y));
+  assert.equal(last.row, INVADER_ROWS - 1);
+  assert.equal(last.column, INVADER_COLUMNS - 1);
+  assert.equal(
+      last.x, left + (INVADER_COLUMNS - 1) * (INVADER_WIDTH + INVADER_GAP_X));
+  assert.equal(
+      last.y, top + (INVADER_ROWS - 1) * (INVADER_HEIGHT + INVADER_GAP_Y));
 
-  for (const inv of invaders) {
-    assert.equal(inv.alive, true);
-    assert.ok(inv.x >= 0 && inv.x + INV_W <= 800);
+  for (const invader of invaders) {
+    assert.equal(invader.alive, true);
+    assert.ok(invader.x >= 0 && invader.x + INVADER_WIDTH <= 800);
   }
 });
 
-test("invader rows use the classic types and scores", () => {
-  assert.equal(invaderTypeForRow(0), "B");
+test('invader rows use the mantis, beetle and fly types and scores', () => {
+  assert.equal(invaderTypeForRow(0), InvaderType.MANTIS);
   assert.equal(pointsForRow(0), 30);
   for (const row of [1, 2]) {
-    assert.equal(invaderTypeForRow(row), "A");
+    assert.equal(invaderTypeForRow(row), InvaderType.BEETLE);
     assert.equal(pointsForRow(row), 20);
   }
   for (const row of [3, 4]) {
-    assert.equal(invaderTypeForRow(row), "C");
+    assert.equal(invaderTypeForRow(row), InvaderType.FLY);
     assert.equal(pointsForRow(row), 10);
   }
 });
 
-test("BUNKER_SHAPE is rectangular", () => {
+test('BUNKER_SHAPE is rectangular', () => {
   assert.equal(BUNKER_SHAPE.length, BUNKER_ROWS);
-  assert.ok(BUNKER_SHAPE.every((row) => row.length === BUNKER_COLS));
+  assert.ok(BUNKER_SHAPE.every((row) => row.length === BUNKER_COLUMNS));
 });
 
-test("makeBunkers builds full grids at the requested positions", () => {
-  const bunkers = makeBunkers(432, [130, 604]);
+test('createBunkers builds full grids at the requested positions', () => {
+  const bunkers = createBunkers(432, [130, 604]);
   assert.equal(bunkers.length, 2);
 
-  for (const b of bunkers) {
-    assert.equal(b.rows, BUNKER_ROWS);
-    assert.equal(b.cols, BUNKER_COLS);
-    assert.equal(b.cell, BUNKER_CELL);
-    assert.equal(b.w, BUNKER_COLS * BUNKER_CELL);
-    assert.equal(b.h, BUNKER_ROWS * BUNKER_CELL);
-    assert.equal(b.grid.length, BUNKER_ROWS);
-    assert.ok(b.grid.every((row) => row.length === BUNKER_COLS));
+  for (const bunker of bunkers) {
+    assert.equal(bunker.y, 432);
+    assert.equal(bunker.width, BUNKER_COLUMNS * BUNKER_CELL_SIZE);
+    assert.equal(bunker.height, BUNKER_ROWS * BUNKER_CELL_SIZE);
+    assert.equal(bunker.cells.length, BUNKER_ROWS);
+    assert.ok(bunker.cells.every((row) => row.length === BUNKER_COLUMNS));
   }
 
   assert.equal(bunkers[0].x, 130);
   assert.equal(bunkers[1].x, 604);
 });
 
-test("damageBunker clears cells around the impact when rng allows", () => {
-  const [b] = makeBunkers(0, [0]);
-  const before = b.grid.flat().filter(Boolean).length;
-  const impactX = 11 * BUNKER_CELL + 1;
-  const impactY = 5 * BUNKER_CELL + 1;
+test('Bunker.damage clears cells around the impact when random allows', () => {
+  const bunker = new Bunker(0, 0);
+  const before = countStanding(bunker);
+  const impactX = 11 * BUNKER_CELL_SIZE + 1;
+  const impactY = 5 * BUNKER_CELL_SIZE + 1;
 
-  assert.equal(b.grid[5][11], 1);
-  damageBunker(b, impactX, impactY, 1, () => 0);
+  assert.equal(bunker.cells[5][11], true);
+  bunker.damage(impactX, impactY, 1, () => 0);
 
-  const after = b.grid.flat().filter(Boolean).length;
-  assert.ok(after < before);
-  assert.equal(b.grid[5][11], 0);
+  assert.ok(countStanding(bunker) < before);
+  assert.equal(bunker.cells[5][11], false);
 });
 
-test("damageBunker keeps cells when rng refuses", () => {
-  const [b] = makeBunkers(0, [0]);
-  const before = b.grid.flat().filter(Boolean).length;
-  damageBunker(b, 33, 21, 1, () => 1);
-  assert.equal(b.grid.flat().filter(Boolean).length, before);
+test('Bunker.damage keeps cells when random refuses', () => {
+  const bunker = new Bunker(0, 0);
+  const before = countStanding(bunker);
+  bunker.damage(33, 21, 1, () => 1);
+  assert.equal(countStanding(bunker), before);
 });
 
-test("damageBunker ignores impacts fully outside the grid", () => {
-  const [b] = makeBunkers(0, [0]);
-  const before = JSON.stringify(b.grid);
-  damageBunker(b, -50, -50, 1, () => 0);
-  assert.equal(JSON.stringify(b.grid), before);
+test('Bunker.damage ignores impacts fully outside the grid', () => {
+  const bunker = new Bunker(0, 0);
+  const before = JSON.stringify(bunker.cells);
+  bunker.damage(-50, -50, 1, () => 0);
+  assert.equal(JSON.stringify(bunker.cells), before);
 });
 
-test("eraseBunkerRect clears only the requested area", () => {
-  const [b] = makeBunkers(0, [0]);
-  eraseBunkerRect(b, 0, 5 * BUNKER_CELL, BUNKER_CELL * 2, BUNKER_CELL * 2);
+test('Bunker.erase clears only the requested area', () => {
+  const bunker = new Bunker(0, 0);
+  bunker.erase(
+      0, 5 * BUNKER_CELL_SIZE, BUNKER_CELL_SIZE * 2, BUNKER_CELL_SIZE * 2);
 
-  for (let r = 5; r <= 6; r++)
-    for (let c = 0; c <= 1; c++)
-      assert.equal(b.grid[r][c], 0);
-
-  assert.equal(b.grid[7][0], 1);
+  for (let row = 5; row <= 6; row++) {
+    for (let column = 0; column <= 1; column++) {
+      assert.equal(bunker.cells[row][column], false);
+    }
+  }
+  assert.equal(bunker.cells[7][0], true);
 });
 
-test("bunkerOverlapsRect sees filled cells and ignores the empty arch", () => {
-  const [b] = makeBunkers(0, [0]);
+test('Bunker.overlaps sees standing cells and ignores the empty arch', () => {
+  const bunker = new Bunker(0, 0);
 
-  assert.equal(bunkerOverlapsRect(b, 11 * BUNKER_CELL, 5 * BUNKER_CELL, 1, 1), true);
+  assert.equal(
+      bunker.overlaps(11 * BUNKER_CELL_SIZE, 5 * BUNKER_CELL_SIZE, 1, 1), true);
 
-  const archX = 8 * BUNKER_CELL + 1;
-  const archY = 9 * BUNKER_CELL + 1;
-  assert.equal(bunkerOverlapsRect(b, archX, archY, 1, 1), false);
+  const archX = 8 * BUNKER_CELL_SIZE + 1;
+  const archY = 9 * BUNKER_CELL_SIZE + 1;
+  assert.equal(bunker.overlaps(archX, archY, 1, 1), false);
 
-  assert.equal(bunkerOverlapsRect(b, -100, -100, 1, 1), false);
+  assert.equal(bunker.overlaps(-100, -100, 1, 1), false);
 });
 
-test("pickUfoPoints draws from the classic table", () => {
+test('pickUfoPoints draws from the saucer table', () => {
   assert.equal(pickUfoPoints(() => 0), UFO_POINTS[0]);
   assert.equal(pickUfoPoints(() => 0.999), UFO_POINTS[UFO_POINTS.length - 1]);
   assert.equal(pickUfoPoints(() => 1), UFO_POINTS[UFO_POINTS.length - 1]);

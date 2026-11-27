@@ -1,0 +1,13 @@
+.git
+node_modules
+dist
+.vite
+tests
+*.log
+.DS_Store
+.env
+.env.*
+Dockerfile
+.dockerignore
+.local
+docker-build
